@@ -18,7 +18,7 @@ Simplex-nelder-mead/
 ├── resultados3d.txt # Resultados do Nelder-Mead em R³
 └── README.md # Este arquivo
 
-## ⚙️ Execução
+##  Execução
 
 ### 1. Requisitos
 
