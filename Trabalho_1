@@ -1,0 +1,84 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+class Visualizacao:
+    @staticmethod
+    def plot2d(history):
+        # Geração da malha de contorno da função
+        x = np.linspace(-2, 2, 400)
+        y = np.linspace(-2, 2, 400)
+        X, Y = np.meshgrid(x, y)
+        Z = Problema.f([X, Y], dim=2)
+
+        plt.figure(figsize=(10, 8))
+        plt.contour(X, Y, Z, levels=50, cmap='viridis')
+
+        # Colormap com maior contraste: HSV
+        cmap = cm.get_cmap('hsv', len(history))
+
+        # Desenha o simplex de cada iteração com cor bem distinta
+        for i, simplex in enumerate(history):
+            points = np.array(simplex)
+            color = cmap(i)
+            plt.plot(*zip(*points, points[0]), color=color, lw=2.5)  # Traço mais grosso
+
+        # Marca o ponto mínimo final
+        minimo = history[-1][0]
+        plt.plot(minimo[0], minimo[1], 'ro', label='Mínimo encontrado')
+        plt.title('Evolução do Simplex - f(x, y) = x² + y²')
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+
+    @staticmethod
+    def plot3d(history):
+        fig = plt.figure(figsize=(12, 9))
+        ax = fig.add_subplot(111, projection='3d')
+        ax.set_title('Evolução do Simplex - f(x, y, z) = x² + y² + z²')
+
+        # Colormap mais vívido
+        cmap = cm.get_cmap('hsv', len(history))
+
+        for i, simplex in enumerate(history):
+            simplex = np.array(simplex)
+            faces = [
+                [simplex[0], simplex[1], simplex[2]],
+                [simplex[0], simplex[1], simplex[3]],
+                [simplex[0], simplex[2], simplex[3]],
+                [simplex[1], simplex[2], simplex[3]]
+            ]
+            color = cmap(i)
+            poly = Poly3DCollection(faces, alpha=0.3, edgecolor='k', linewidths=1)
+            poly.set_facecolor(color)
+            ax.add_collection3d(poly)
+
+        # Marca o ponto mínimo final
+        minimo = history[-1][0]
+        ax.scatter(minimo[0], minimo[1], minimo[2], color='red', s=50, label='Mínimo encontrado')
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_zlabel('z')
+        ax.set_xlim(-0.5, 1.25)
+        ax.set_ylim(0, 2)
+        ax.set_zlim(-2, 2)
+        ax.legend()
+        plt.show()
+
+if __name__ == "__main__":
+    # Execução 2D com função quadrática
+    x_inicial_2d = np.array([1.5, -1.0])
+    metodo2d = NelderMead(lambda x: Problema.f(x, dim=2), x_inicial_2d)
+    minimo2d, historico2d = metodo2d.minimizar()
+    print("Mínimo f2d encontrado em:", minimo2d)
+    Visualizacao.plot2d(historico2d)
+
+    # Execução 3D com função esférica
+    x_inicial_3d = np.array([1.5, 1.0, -1.0])
+    metodo3d = NelderMead(lambda x: Problema.f(x, dim=3), x_inicial_3d)
+    minimo3d, historico3d = metodo3d.minimizar()
+    print("Mínimo f3d encontrado em:", minimo3d)
+    Visualizacao.plot3d(historico3d)
+
