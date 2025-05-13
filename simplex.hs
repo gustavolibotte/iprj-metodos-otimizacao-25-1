@@ -177,7 +177,7 @@ main = do
     exportarResultados "resultados3d.txt" resultados3D
     putStrLn "Resultados 3D exportados para resultados3d.txt"
 
--- Implementação local da função intercalate (caso não queira importar do Data.List)
+-- Implementação local da função intercalate 
 intercalar :: [a] -> [[a]] -> [a]
 intercalar _ [] = []
 intercalar _ [x] = x
