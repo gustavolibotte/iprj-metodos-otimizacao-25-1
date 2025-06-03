@@ -2,6 +2,78 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
+class Problema:
+    @staticmethod
+    def f(x, dim=2):
+        if dim == 2:
+            return x[0]**2 + x[1]**2
+        elif dim == 3:
+            return x[0]**2 + x[1]**2 + x[2]**2
+        else:
+            raise ValueError("Dimensão não suportada. Use dim=2 ou dim=3.")
+
+class NelderMead:
+    def __init__(self, func, x0, alpha=1.0, gamma=2.0, rho=0.5, sigma=0.5, max_iter=200, tol=1e-6):
+        self.func = func
+        self.x0 = x0
+        self.dim = len(x0)
+        self.alpha = alpha
+        self.gamma = gamma
+        self.rho = rho
+        self.sigma = sigma
+        self.max_iter = max_iter
+        self.tol = tol
+
+    def minimizar(self):
+        # Criação do simplex inicial
+        simplex = [self.x0]
+        for i in range(self.dim):
+            x = np.copy(self.x0)
+            x[i] += 0.05 if x[i] == 0 else 0.05 * x[i]
+            simplex.append(x)
+        history = [np.copy(simplex)]
+
+        for _ in range(self.max_iter):
+            simplex = sorted(simplex, key=self.func)
+            best = simplex[0]
+            worst = simplex[-1]
+            second_worst = simplex[-2]
+
+            # Cálculo do centroide dos melhores pontos
+            centroid = np.mean(simplex[:-1], axis=0)
+
+            # Reflexão
+            xr = centroid + self.alpha * (centroid - worst)
+            fxr = self.func(xr)
+
+            if self.func(best) <= fxr < self.func(second_worst):
+                simplex[-1] = xr
+            elif fxr < self.func(best):
+                # Expansão
+                xe = centroid + self.gamma * (xr - centroid)
+                if self.func(xe) < fxr:
+                    simplex[-1] = xe
+                else:
+                    simplex[-1] = xr
+            else:
+                # Contração
+                xc = centroid + self.rho * (worst - centroid)
+                if self.func(xc) < self.func(worst):
+                    simplex[-1] = xc
+                else:
+                    # Redução
+                    for i in range(1, len(simplex)):
+                        simplex[i] = best + self.sigma * (simplex[i] - best)
+
+            history.append(np.copy(simplex))
+
+            # Critério de convergência
+            if np.std([self.func(p) for p in simplex]) < self.tol:
+                break
+
+        return simplex[0], history
+
 class Visualizacao:
     @staticmethod
     def plot2d(history):
@@ -81,4 +153,3 @@ if __name__ == "__main__":
     minimo3d, historico3d = metodo3d.minimizar()
     print("Mínimo f3d encontrado em:", minimo3d)
     Visualizacao.plot3d(historico3d)
-
