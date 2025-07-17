@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Otimização de Tanque Cilíndrico</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-4">
+        <h1 class="mb-4 text-center">
+            <i class="bi bi-gear-wide-connected"></i> Otimização de Tanque Cilíndrico
+        </h1>
+        <!-- Introdução e Contexto -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="bi bi-book"></i> Introdução</h5>
+            </div>
+            <div class="card-body">
+                <p>
+                    O problema proposto consiste na <strong>otimização de um tanque cilíndrico</strong> para transporte de resíduos tóxicos. O objetivo é <strong>minimizar o custo</strong> do tanque garantindo as restrições de volume e dimensões máximas da carroceria de uma camionete.
+                </p>
+                <p>
+                    O custo total envolve o <strong>custo do material (massa)</strong> e o <strong>custo de soldagem</strong>, com variáveis de projeto sendo o <strong>comprimento (L)</strong> e o <strong>diâmetro (D)</strong>.
+                </p>
+                <div class="text-center">
+                    <!-- Imagem do tanque aqui -->
+                    <img src="img/tanque.png" alt="Tanque Cilíndrico" class="img-fluid rounded shadow-sm mb-3">
+                    <p class="text-muted">Figura: Representação do tanque e suas dimensões</p>
+                </div>
+            </div>
+        </div>
+        <!-- Tabela de Parâmetros -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-table"></i> Tabela 1: Parâmetros para otimização do tanque</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-center align-middle">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>Parâmetro</th>
+                                <th>Símbolo</th>
+                                <th>Valor</th>
+                                <th>Unidades</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Volume requerido</td>
+                                <td><i>V<sub>0</sub></i></td>
+                                <td>0,8</td>
+                                <td>m³</td>
+                            </tr>
+                            <tr>
+                                <td>Espessura</td>
+                                <td><i>t</i></td>
+                                <td>3</td>
+                                <td>cm</td>
+                            </tr>
+                            <tr>
+                                <td>Densidade</td>
+                                <td><i>ρ</i></td>
+                                <td>8.000</td>
+                                <td>kg/m³</td>
+                            </tr>
+                            <tr>
+                                <td>Comprimento do leito</td>
+                                <td><i>L<sub>max</sub></i></td>
+                                <td>2</td>
+                                <td>m</td>
+                            </tr>
+                            <tr>
+                                <td>Largura do leito</td>
+                                <td><i>D<sub>max</sub></i></td>
+                                <td>1</td>
+                                <td>m</td>
+                            </tr>
+                            <tr>
+                                <td>Custo do material</td>
+                                <td><i>c<sub>m</sub></i></td>
+                                <td>4,5</td>
+                                <td>$/kg</td>
+                            </tr>
+                            <tr>
+                                <td>Custo da soldagem</td>
+                                <td><i>c<sub>w</sub></i></td>
+                                <td>20</td>
+                                <td>$/m</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-3">
+                    Onde <strong>C</strong> é o custo ($), <strong>m</strong> é a massa (kg), <strong>ℓ<sub>w</sub></strong> é o comprimento da solda (m), e <strong>c<sub>m</sub></strong> e <strong>c<sub>w</sub></strong> são os fatores de custo por massa e comprimento da solda, respectivamente.
+                </p>
+            </div>
+        </div>
+
+        <!-- Função Objetivo -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="bi bi-funnel"></i> Função Objetivo</h5>
+            </div>
+            <div class="card-body">
+                <p>O custo total é dado por:</p>
+                <div class="text-center mb-3">
+                    <!-- Imagem da fórmula da função objetivo -->
+                    <img src="img/funcao_objetivo.png" alt="Fórmula do custo" class="img-fluid">
+                </div>
+                <p>
+                    A massa <em>m</em> e o comprimento da solda <em>ℓ<sub>w</sub></em> são funções de <strong>L</strong> e <strong>D</strong>, e incluem as contribuições do cilindro e das tampas circulares.
+                </p>
+            </div>
+        </div>
+
+        <!-- Restrições -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="bi bi-exclamation-circle"></i> Restrições do Problema</h5>
+            </div>
+            <div class="card-body">
+                <p>As restrições incluem:</p>
+                <ul>
+                    <li>Volume entre 90% e 110% de V₀</li>
+                    <li>Diâmetro D ≤ 1 m</li>
+                    <li>Comprimento L ≤ 2 m</li>
+                </ul>
+                <div class="text-center">
+                    <!-- Imagem da fórmula das restrições -->
+                    <img src="img/restricoes.png" alt="Fórmulas das restrições" class="img-fluid">
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-sliders"></i> Configurações</h5>
+            </div>
+            <div class="card-body">
+                <form id="form-otimizacao" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="method" class="form-label">Método de Otimização:</label>
+                            <select id="method" class="form-select" required>
+                            <option value="steepest">Gradiente Descendente</option>
+                            <option value="newton">Newton</option>
+                            <option value="dfp">DFP</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="L0" class="form-label">Comprimento Inicial (L):</label>
+                            <input type="number" id="L0" class="form-control" value="1.90" step="0.01" min="0.1" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="D0" class="form-label">Diâmetro Inicial (D):</label>
+                            <input type="number" id="D0" class="form-control" value="0.75" step="0.01" min="0.1" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="tol" class="form-label">Tolerância:</label>
+                            <input type="number" id="tol" class="form-control" value="0.0001" step="any" min="0.0000001" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="max_iter" class="form-label">Máx. Iterações:</label>
+                            <input type="number" id="max_iter" class="form-control" value="100" min="10" step="1" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="h" class="form-label">Passo (derivada):</label>
+                            <input type="number" id="h" class="form-control" value="0.000001" step="any" min="0.0000001" required>
+                        </div>
+                        <!-- <div class="col-md-6">
+                            <label for="steps" class="form-label">Resolução da Malha (curvas de nível):</label>
+                            <input type="number" id="steps" class="form-control" value="50" min="10" max="200" step="1" required>
+                        </div> -->
+
+                        <div id="input-alert" class="alert alert-danger d-none" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> Por favor, preencha todos os campos corretamente antes de continuar.
+                        </div>
+                        
+                        <div class="col-12 d-grid mt-3">
+                            <button type="submit" id="run-btn" class="btn btn-success btn-lg">
+                            <i class="bi bi-play-circle"></i> Executar Otimização
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card shadow-sm mt-5">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-compass"></i> Comparação de Métodos</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <button id="compare-btn" class="btn btn-primary w-100">
+                            <i class="bi bi-arrow-repeat"></i> Executar Todos os Métodos
+                        </button>
+                    </div>
+                    <!-- <div class="col-md-8">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="auto-zoom" checked>
+                            <label class="form-check-label" for="auto-zoom">Ajuste automático de zoom nos gráficos</label>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <!-- Resultados -->
+        <div class="container mt-5" id="resultado">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-clipboard-check"></i> Resultados da Otimização</h4>
+                </div>
+                <div class="card-body">
+          
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <p class="mb-1"><i class="bi bi-arrow-repeat"></i> Iterações:</p>
+                            <h5><span id="iterations">-</span></h5>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><i class="bi bi-bar-chart"></i> Avaliações da Função:</p>
+                            <h5><span id="evaluations">-</span></h5>
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <p class="mb-1"><i class="bi bi-bullseye"></i> Solução Final:</p>
+                            <h5>L = <span id="sol-L">-</span> m &nbsp;&nbsp; D = <span id="sol-D">-</span> m</h5>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <p class="mb-1"><i class="bi bi-currency-dollar"></i> Custo Final:</p>
+                            <h4 class="text-success">R$<span id="final-cost">-</span></h4>
+                        </div>
+                        <!-- Alerta de Custo Inválido -->
+                        <div id="alert-custo-negativo" class="alert alert-danger mt-3 d-none" role="alert">
+                            <i class="bi bi-exclamation-octagon-fill"></i>
+                            O custo final calculado é negativo, o que indica um erro no modelo ou nos parâmetros fornecidos. 
+                            Verifique as configurações de entrada ou revise a função objetivo.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-graph-up"></i> Curvas de Nível e Trajetória</h5>
+                            <button id="export-contour" class="btn btn-sm btn-light" title="Exportar gráfico como PNG">
+                                <i class="bi bi-download"></i> Exportar PNG
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="contour-plot" width="600" height="400"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-activity"></i> Convergência do Método</h5>
+                            <button id="export-convergence" class="btn btn-sm btn-light" title="Exportar gráfico como PNG">
+                                <i class="bi bi-download"></i> Exportar PNG
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="convergence-plot" width="600" height="400"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow-sm mt-4" id="comparison-section">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Resultados Comparativos</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-gradient-steepest">
+                                <h6 class="mb-0">Gradiente Descendente</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-1"><i class="bi bi-arrow-repeat"></i> Iterações: <span id="comp-steepest-iter">-</span></p>
+                                <p class="mb-1"><i class="bi bi-currency-dollar"></i> Custo: R$<span id="comp-steepest-cost">-</span></p>
+                                <p class="mb-1"><i class="bi bi-clock"></i> Tempo: <span id="comp-steepest-time">-</span> ms</p>
+                                <p class="mb-1">L = <span id="comp-steepest-L">-</span> m</p>
+                                <p class="mb-1">D = <span id="comp-steepest-D">-</span> m</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-gradient-newton">
+                                <h6 class="mb-0">Método de Newton</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-1"><i class="bi bi-arrow-repeat"></i> Iterações: <span id="comp-newton-iter">-</span></p>
+                                <p class="mb-1"><i class="bi bi-currency-dollar"></i> Custo: R$<span id="comp-newton-cost">-</span></p>
+                                <p class="mb-1"><i class="bi bi-clock"></i> Tempo: <span id="comp-newton-time">-</span> ms</p>
+                                <p class="mb-1">L = <span id="comp-newton-L">-</span> m</p>
+                                <p class="mb-1">D = <span id="comp-newton-D">-</span> m</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-gradient-dfp">
+                                <h6 class="mb-0">Método DFP</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-1"><i class="bi bi-arrow-repeat"></i> Iterações: <span id="comp-dfp-iter">-</span></p>
+                                <p class="mb-1"><i class="bi bi-currency-dollar"></i> Custo: R$<span id="comp-dfp-cost">-</span></p>
+                                <p class="mb-1"><i class="bi bi-clock"></i> Tempo: <span id="comp-dfp-time">-</span> ms</p>
+                                <p class="mb-1">L = <span id="comp-dfp-L">-</span> m</p>
+                                <p class="mb-1">D = <span id="comp-dfp-D">-</span> m</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Tabela de Iterações -->
+        <div class="card mt-4 shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="bi bi-list-ol"></i> Histórico da Otimização</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                    <table id="tabela-historico" class="table table-bordered table-sm text-center align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Iteração</th>
+                                <th>L (m)</th>
+                                <th>D (m)</th>
+                                <th>Custo (R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dicas de Valores Válidos -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Dicas de Valores Iniciais Válidos</h5>
+            </div>
+            <div class="card-body">
+                <p>Use os valores abaixo como ponto de partida. Eles atendem (ou quase atendem) às restrições do problema de volume:</p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-center align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Diâmetro (D)</th>
+                                <th>Comprimento (L)</th>
+                                <th>Volume (m³)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0.70 m</td>
+                                <td>1.80 m</td>
+                                <td>0.693</td>
+                                <td><span class="text-danger"><i class="bi bi-x-circle-fill"></i> Fora</span></td>
+                            </tr>
+                            <tr>
+                                <td>0.75 m</td>
+                                <td>1.90 m</td>
+                                <td>0.838</td>
+                                <td><span class="text-success"><i class="bi bi-check-circle-fill"></i> OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>0.78 m</td>
+                                <td>1.80 m</td>
+                                <td>0.858</td>
+                                <td><span class="text-success"><i class="bi bi-check-circle-fill"></i> OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>0.80 m</td>
+                                <td>1.70 m</td>
+                                <td>0.855</td>
+                                <td><span class="text-success"><i class="bi bi-check-circle-fill"></i> OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>0.90 m</td>
+                                <td>1.40 m</td>
+                                <td>0.892</td>
+                                <td><span class="text-success"><i class="bi bi-check-circle-fill"></i> Limite</span></td>
+                            </tr>
+                            <tr>
+                                <td>1.00 m</td>
+                                <td>1.00 m</td>
+                                <td>0.785</td>
+                                <td><span class="text-success"><i class="bi bi-check-circle-fill"></i> OK</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-muted mt-2"><i class="bi bi-info-circle"></i> O volume deve estar entre 0.72 m³ e 0.88 m³ para atender à tolerância de ±10% de 0.8 m³.</p>
+            </div>
+        </div>
+
+    </div>
+
+<script src="script.js"></script>
+</body>
+</html>
